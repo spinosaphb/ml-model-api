@@ -6,16 +6,19 @@ from services import mlmodel as mlmodel_service
 from db.mongodb import get_database
 from models.mlmodel import MLModel, MLModelResponse
 from typing import Optional, List
+from pymongo.results import DeleteResult
 
 router = APIRouter()
 
-@router.post("/modelo/", tags=['Model'], response_model=MLModel)
+@router.post("/modelo/", tags=['Model'], response_model=MLModelResponse)
 async def create_model(model: MLModel, database = Depends(get_database)):
     """
     Create model
     """
     result = await mlmodel_service.create_model(database, model)
-    return model
+    model_response = MLModelResponse(**model.dict()) 
+    model_response.id = result['id']
+    return model_response
 
 
 @router.get("/modelo/", tags=['Model'], response_model=List[MLModelResponse])
@@ -63,5 +66,5 @@ async def delete_model(model_id, database = Depends(get_database)):
     """
     Delete Model
     """
-    response = await mlmodel_service.delete_model(database, model_id)
-    return response
+    response: DeleteResult = await mlmodel_service.delete_model(database, model_id)
+    return {'deleted_count': response.deleted_count}
