@@ -16,6 +16,7 @@ async def get_models(
         item.update({'_id': str(item['_id'])})
         yield item
 
+
 async def get_model(conn, projection = None, **query):
     """Return model"""
     return await crud_model.get_model(conn, query, projection)
