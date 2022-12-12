@@ -1,0 +1,26 @@
+version: '3'
+services:
+  fastapi_backend:
+    build: .
+    image: fastapi_backend:0.0.1
+    container_name: "fastapi_server"
+    networks:
+      - mlmodel_services
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+
+  mlmodel_mongodb:
+    image: mongo:4.4.9
+    container_name: "mlmodel_mongo"
+    networks:
+      - mlmodel_services
+    ports:
+      - 27017:27017
+    volumes:
+      - "~/mlmodel_db/:/root/db"
+networks:
+  mlmodel_services:
+
+  

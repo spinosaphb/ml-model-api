@@ -6,7 +6,7 @@ from databases import DatabaseURL
 
 API_PREFIX = "/api/lead"
 
-MONGODB_URL = DatabaseURL(getenv('MONGO_URL', ""))
+MONGODB_URL = DatabaseURL(getenv('MONGO_URL', getenv('MONGO_URL_PROD', "")))
 MAX_CONNECTIONS_COUNT = int(getenv("MAX_CONNECTIONS_COUNT", None) or 10)
 MIN_CONNECTIONS_COUNT = int(getenv("MIN_CONNECTIONS_COUNT", None) or 10)
 

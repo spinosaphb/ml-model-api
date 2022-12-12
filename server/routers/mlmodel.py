@@ -1,7 +1,9 @@
 """
 Machine Learning Model route
 """
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from services import mlmodel as mlmodel_service
 from db.mongodb import get_database
 from models.mlmodel import MLModel, MLModelResponse
@@ -10,7 +12,7 @@ from pymongo.results import DeleteResult
 
 router = APIRouter()
 
-@router.post("/modelo/", tags=['Model'], response_model=MLModelResponse)
+@router.post("/modelo/", tags=['Model'], response_model=MLModelResponse, responses={201: {"model": MLModelResponse}})
 async def create_model(model: MLModel, database = Depends(get_database)):
     """
     Create model
@@ -18,7 +20,9 @@ async def create_model(model: MLModel, database = Depends(get_database)):
     result = await mlmodel_service.create_model(database, model)
     model_response = MLModelResponse(**model.dict()) 
     model_response.id = result['id']
-    return model_response
+    content = jsonable_encoder(model_response)
+
+    return JSONResponse(content=content, status_code=status.HTTP_201_CREATED)
 
 
 @router.get("/modelo/", tags=['Model'], response_model=List[MLModelResponse])

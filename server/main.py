@@ -21,7 +21,7 @@ gunicorn_logger = logging.getLogger("gunicorn")
 app = FastAPI()
 
 app = FastAPI(
-    title="Dell Lead Test API",
+    title="Machine Learning Model Test API",
     description="API with services for Machine Learning Models",
     version="0.0.1",
     openapi_url=OPENAPI_URL,
